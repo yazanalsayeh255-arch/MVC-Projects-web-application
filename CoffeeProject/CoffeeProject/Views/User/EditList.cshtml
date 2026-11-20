@@ -1,0 +1,449 @@
+﻿@model CoffeeProject.Models.Cheese_Burger_Menu.RandomCheeseBurger
+
+@{
+    ViewBag.Title = "تعديل بيانات الصنف";
+}
+
+<!-- Google Fonts (Cairo for crisp Arabic & English typography) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg-page: #f7f4f0;
+        --bg-card: #ffffff;
+        --primary-dark: #2c1e16; /* Rich Espresso */
+        --primary-accent: #d97706; /* Warm Burger/Cheddar Amber */
+        --primary-hover: #b45309;
+        --edit-badge-bg: #fef3c7;
+        --edit-badge-text: #b45309;
+        --text-main: #1f2937;
+        --text-muted: #6b7280;
+        --border-subtle: #e5e0d8;
+        --input-bg: #faf8f5;
+        --danger-text: #dc2626;
+    }
+
+    body {
+        background-color: var(--bg-page);
+        font-family: 'Cairo', sans-serif;
+        color: var(--text-main);
+    }
+
+    .form-dashboard-container {
+        max-width: 720px;
+        margin: 45px auto;
+        padding: 36px 40px;
+        background: var(--bg-card);
+        border-radius: 22px;
+        box-shadow: 0 14px 38px rgba(44, 30, 22, 0.08);
+        border: 1px solid var(--border-subtle);
+        direction: rtl;
+        text-align: right;
+    }
+
+    /* Header Section */
+    .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding-bottom: 22px;
+        margin-bottom: 28px;
+        border-bottom: 2px solid var(--bg-page);
+    }
+
+    .edit-mode-pill {
+        display: inline-block;
+        background-color: var(--edit-badge-bg);
+        color: var(--edit-badge-text);
+        font-size: 0.78rem;
+        font-weight: 800;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin-bottom: 6px;
+    }
+
+    .form-title-group h2 {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--primary-dark);
+    }
+
+    .form-title-group p {
+        margin: 4px 0 0;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    .btn-back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background-color: #f3efe9;
+        color: var(--primary-dark) !important;
+        text-decoration: none !important;
+        padding: 9px 18px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+        .btn-back-link:hover {
+            background-color: #e7e0d6;
+            transform: translateX(2px);
+        }
+
+    /* Language Toggle Card */
+    .language-toggle-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #fdf8f3;
+        border: 1.5px solid #f3e4d3;
+        border-radius: 14px;
+        padding: 16px 20px;
+        margin-bottom: 26px;
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+    }
+
+        .language-toggle-box:hover {
+            border-color: var(--primary-accent);
+        }
+
+    .language-toggle-label {
+        display: block;
+        margin: 0;
+        font-weight: 700;
+        color: var(--primary-dark);
+        font-size: 0.98rem;
+        cursor: pointer;
+    }
+
+    .language-toggle-sub {
+        display: block;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        font-weight: 400;
+    }
+
+    /* Custom Switch Styling */
+    .switch-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 52px;
+        height: 28px;
+        flex-shrink: 0;
+    }
+
+        .switch-wrapper input[type="checkbox"] {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .switch-slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background-color: #d6cfc7;
+        border-radius: 34px;
+        transition: 0.3s;
+    }
+
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+    .switch-wrapper input[type="checkbox"]:checked ~ .switch-slider {
+        background-color: var(--primary-accent);
+    }
+
+        .switch-wrapper input[type="checkbox"]:checked ~ .switch-slider:before {
+            transform: translateX(24px);
+        }
+
+    /* Form Fields */
+    .bistro-field-group {
+        margin-bottom: 22px;
+    }
+
+    .bistro-label {
+        display: block;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 8px;
+        font-size: 0.96rem;
+    }
+
+    .bistro-input,
+    .bistro-select {
+        width: 100%;
+        height: 48px;
+        padding: 10px 16px;
+        font-family: 'Cairo', sans-serif;
+        font-size: 0.98rem;
+        color: var(--text-main);
+        background-color: var(--input-bg);
+        border: 1.5px solid var(--border-subtle);
+        border-radius: 12px;
+        transition: all 0.2s ease;
+        outline: none;
+        box-shadow: none;
+    }
+
+        .bistro-input:focus,
+        .bistro-select:focus {
+            background-color: #ffffff;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.14);
+        }
+
+    /* Price Input with Currency Suffix */
+    .price-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+        .price-input-wrapper .bistro-input {
+            padding-left: 55px;
+        }
+
+    .currency-tag {
+        position: absolute;
+        left: 14px;
+        background-color: #ecfdf5;
+        color: #047857;
+        font-weight: 800;
+        font-size: 0.85rem;
+        padding: 4px 10px;
+        border-radius: 7px;
+        pointer-events: none;
+    }
+
+    /* Validation Text */
+    .field-validation-error,
+    .text-danger {
+        color: var(--danger-text);
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 6px;
+        display: block;
+    }
+
+    /* Action Buttons Row */
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 32px;
+        padding-top: 20px;
+        border-top: 2px solid var(--bg-page);
+    }
+
+    .btn-submit-bistro {
+        flex: 2;
+        height: 52px;
+        background: linear-gradient(135deg, var(--primary-dark), #432e22);
+        color: #ffffff;
+        border: none;
+        border-radius: 14px;
+        font-family: 'Cairo', sans-serif;
+        font-size: 1.05rem;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(44, 30, 22, 0.22);
+        transition: all 0.25s ease;
+    }
+
+        .btn-submit-bistro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 26px rgba(44, 30, 22, 0.32);
+        }
+
+    .btn-cancel-bistro {
+        flex: 1;
+        height: 52px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f3efe9;
+        color: var(--primary-dark) !important;
+        text-decoration: none !important;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 0.98rem;
+        transition: all 0.2s ease;
+    }
+
+        .btn-cancel-bistro:hover {
+            background-color: #e7e0d6;
+        }
+</style>
+
+<div class="form-dashboard-container">
+    <div class="form-header">
+        <div class="form-title-group">
+            <span class="edit-mode-pill">وضع التعديل</span>
+            <h2>✏️ تعديل بيانات الصنف</h2>
+            <p>قم بتحديث الفئة أو اسم الطلب أو السعر ثم اضغط حفظ التغييرات</p>
+        </div>
+
+        @Html.ActionLink("← العودة للقائمة", "cheeseBurgerList", null, new { @class = "btn-back-link" })
+    </div>
+
+    @using (Html.BeginForm("EditList", "User", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ADpages.Id)
+
+        <!-- Arabic Toggle Card -->
+        <label class="language-toggle-box">
+            <span>
+                <span class="language-toggle-label">عرض أسماء الطلبات باللغة العربية</span>
+                <span class="language-toggle-sub">فعّل هذا الخيار لتحديث قائمة الأصناف أدناه بالأسماء العربية تلقائياً</span>
+            </span>
+            <span class="switch-wrapper">
+                @Html.CheckBoxFor(model => model.ADpages.Isarabic, new { @id = "Isarabic" })
+                <span class="switch-slider"></span>
+            </span>
+        </label>
+        @Html.ValidationMessageFor(model => model.ADpages.Isarabic, "", new { @class = "text-danger" })
+
+        <!-- Category Dropdown -->
+        <div class="bistro-field-group">
+            @Html.LabelFor(model => model.ADpages.CategoryId, "فئة الصنف (Category)", htmlAttributes: new { @class = "bistro-label" })
+            @Html.DropDownListFor(
+                               model => model.ADpages.CategoryId,
+                               new SelectList(Model.categorylist, "id", "CategoryName"),
+                               "-- اختر الفئة --",
+                               new { @class = "bistro-select", id = "CategoryDropdown" }
+                           )
+            @Html.ValidationMessageFor(model => model.ADpages.CategoryId, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Menu Order Dropdown (Populated via AJAX) -->
+        <div class="bistro-field-group">
+            @Html.LabelFor(model => model.ADpages.OrderId, "اسم الصنف / الطلب (Name Order)", htmlAttributes: new { @class = "bistro-label" })
+            @Html.DropDownListFor(
+                               model => model.ADpages.OrderId,
+                               new SelectList(Model.orderlist, "id", "CheeseBurgerNames"),
+                               "-- اختر الصنف --",
+                               new { @class = "bistro-select", id = "MenuDropdown" }
+                           )
+            @Html.ValidationMessageFor(model => model.ADpages.OrderId, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Price Field -->
+        <div class="bistro-field-group">
+            @Html.LabelFor(model => model.ADpages.price, "السعر (Price)", htmlAttributes: new { @class = "bistro-label" })
+            <div class="price-input-wrapper">
+                @Html.EditorFor(model => model.ADpages.price, new { htmlAttributes = new { @class = "bistro-input", placeholder = "0.00" } })
+                <span class="currency-tag">JD</span>
+            </div>
+            @Html.ValidationMessageFor(model => model.ADpages.price, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Size Dropdown (Populated via AJAX) -->
+        <div class="bistro-field-group">
+            @Html.LabelFor(model => model.ADpages.sizeId, "اختر الحجم", htmlAttributes: new { @class = "bistro-label" })
+            @Html.DropDownListFor(
+                              model => model.ADpages.sizeId,
+                              new SelectList(Model.sizelist, "Id", "Namesize"),
+                              "-- اختر الحجم --",
+                              new { @class = "bistro-select", id = "SizeId" }
+                          )
+            @Html.ValidationMessageFor(model => model.ADpages.sizeId, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Submit & Cancel Actions -->
+        <div class="form-actions">
+            <input type="submit" value="✓ حفظ التعديلات" class="btn-submit-bistro" />
+            @Html.ActionLink("إلغاء", "Index", null, new { @class = "btn-cancel-bistro" })
+        </div>
+    }
+</div>
+
+<!-- Scripts Section -->
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(function () {
+            function loadCategoryValues() {
+                var categoryId = $('#CategoryDropdown').val();
+                var isArabic = $('#Isarabic').is(':checked');
+                var $menuDropdown = $('#MenuDropdown');
+                var $sizeDropdown = $('#SizeId');
+
+                if (categoryId) {
+                    $menuDropdown.prop('disabled', true);
+                    $sizeDropdown.prop('disabled', true);
+
+                    $menuDropdown.empty().append($('<option>').text('جاري تحميل الأصناف...').val(''));
+                    $sizeDropdown.empty().append($('<option>').text('جاري تحميل الأحجام...').val(''));
+
+                    $.ajax({
+                        url: '@Url.Action("EditCategoryValues", "User")',
+                        type: 'GET',
+                        data: { categoryId: categoryId, isarabic: isArabic },
+                        success: function (response) {
+                            // Populate Menu Dropdown
+                            $menuDropdown.empty();
+                            $menuDropdown.append($('<option>').text('-- اختر الصنف --').val(''));
+                            if (response.menuList) {
+                                $.each(response.menuList, function (index, item) {
+                                    $menuDropdown.append(
+                                        $('<option>').val(item.id).text(item.CheeseBurgerNames)
+                                    );
+                                });
+                            }
+
+                            // Populate Size Dropdown
+                            $sizeDropdown.empty();
+                            $sizeDropdown.append($('<option>').text('-- اختر الحجم --').val(''));
+                            if (response.sizelist) {
+                                $.each(response.sizelist, function (index, item) {
+                                    $sizeDropdown.append(
+                                        $('<option>').val(item.Id).text(item.Namesize)
+                                    );
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error loading category values:", error);
+                            $menuDropdown.empty().append($('<option>').text('فشل تحميل الأصناف').val(''));
+                            $sizeDropdown.empty().append($('<option>').text('فشل تحميل الأحجام').val(''));
+                        },
+                        complete: function () {
+                            $menuDropdown.prop('disabled', false);
+                            $sizeDropdown.prop('disabled', false);
+                        }
+                    });
+                } else {
+                    $menuDropdown.empty().append($('<option>').text('-- اختر الصنف --').val(''));
+                    $sizeDropdown.empty().append($('<option>').text('-- اختر الحجم --').val(''));
+                }
+            }
+
+            // Bind change events to category dropdown and language checkbox
+            $('#CategoryDropdown, #Isarabic').on('change', function () {
+                loadCategoryValues();
+            });
+        });
+    </script>
+}

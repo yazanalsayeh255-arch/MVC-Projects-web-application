@@ -1,0 +1,421 @@
+﻿@model CoffeeProject.Models.Cheese_Burger_Menu.RandomCheeseBurger
+
+@{
+    ViewBag.Title = "قائمة الطلبات";
+}
+
+<!-- Google Fonts (Cairo for crisp Arabic & English typography) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+<style>
+    :root {
+        --bg-page: #f7f4f0;
+        --bg-card: #ffffff;
+        --primary-dark: #2c1e16;
+        --primary-accent: #d97706;
+        --primary-hover: #b45309;
+        --text-main: #1f2937;
+        --text-muted: #6b7280;
+        --border-subtle: #e5e0d8;
+        --row-hover: #fdf8f3;
+        --danger-bg: #fee2e2;
+        --danger-text: #dc2626;
+        --edit-bg: #fef3c7;
+        --edit-text: #b45309;
+    }
+
+    body {
+        background-color: var(--bg-page);
+        font-family: 'Cairo', sans-serif;
+        color: var(--text-main);
+    }
+
+    .menu-dashboard-container {
+        max-width: 1150px;
+        margin: 40px auto;
+        padding: 32px;
+        background: var(--bg-card);
+        border-radius: 20px;
+        box-shadow: 0 12px 35px rgba(44, 30, 22, 0.08);
+        border: 1px solid var(--border-subtle);
+        direction: rtl;
+        text-align: right;
+    }
+
+    .menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        padding-bottom: 24px;
+        margin-bottom: 24px;
+        border-bottom: 2px solid var(--bg-page);
+    }
+
+    .menu-title-group h2 {
+        margin: 0;
+        font-size: 1.9rem;
+        font-weight: 800;
+        color: var(--primary-dark);
+        letter-spacing: -0.3px;
+    }
+
+    .menu-title-group p {
+        margin: 4px 0 0;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    .btn-add-order {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--primary-accent), var(--primary-hover));
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.98rem;
+        box-shadow: 0 6px 16px rgba(217, 119, 6, 0.28);
+        transition: all 0.25s ease;
+    }
+
+        .btn-add-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px rgba(217, 119, 6, 0.38);
+        }
+
+    .dataTables_wrapper .dataTables_filter,
+    .dataTables_wrapper .dataTables_length {
+        margin-bottom: 20px;
+        color: var(--text-muted);
+        font-weight: 600;
+    }
+
+        .dataTables_wrapper .dataTables_filter input {
+            border: 1.5px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 8px 14px;
+            margin-right: 8px;
+            font-family: 'Cairo', sans-serif;
+            background-color: #faf8f5;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+            .dataTables_wrapper .dataTables_filter input:focus {
+                border-color: var(--primary-accent);
+                background-color: #ffffff;
+                box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+            }
+
+        .dataTables_wrapper .dataTables_length select {
+            border: 1.5px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 5px 10px;
+            margin: 0 6px;
+            font-family: 'Cairo', sans-serif;
+            background-color: #faf8f5;
+            outline: none;
+        }
+
+    table.dataTable#cheeseBurgerTable {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100% !important;
+        border: 1px solid var(--border-subtle);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+        table.dataTable#cheeseBurgerTable thead th {
+            background-color: var(--primary-dark);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 16px 18px;
+            text-align: right;
+            border-bottom: none;
+        }
+
+        table.dataTable#cheeseBurgerTable tbody td {
+            padding: 15px 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            vertical-align: middle;
+            font-size: 0.96rem;
+            color: var(--text-main);
+        }
+
+        table.dataTable#cheeseBurgerTable tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.dataTable#cheeseBurgerTable tbody tr {
+            background-color: #ffffff;
+            transition: background-color 0.2s ease;
+        }
+
+            table.dataTable#cheeseBurgerTable tbody tr:hover {
+                background-color: var(--row-hover);
+            }
+
+    .price-badge {
+        display: inline-block;
+        background-color: #ecfdf5;
+        color: #047857;
+        font-weight: 800;
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 0.92rem;
+    }
+
+    .category-pill {
+        display: inline-block;
+        background-color: #f3efe9;
+        color: var(--primary-dark);
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.88rem;
+    }
+
+    .item-name {
+        font-weight: 700;
+        color: var(--primary-dark);
+    }
+
+    .action-group {
+        display: inline-flex;
+        gap: 8px;
+    }
+
+    .btn-action {
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-decoration: none !important;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        border: none;
+        cursor: pointer;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .btn-edit {
+        background-color: var(--edit-bg);
+        color: var(--edit-text) !important;
+    }
+
+        .btn-edit:hover {
+            background-color: #fde68a;
+            transform: translateY(-1px);
+        }
+
+    .btn-delete {
+        background-color: var(--danger-bg);
+        color: var(--danger-text) !important;
+    }
+
+        .btn-delete:hover {
+            background-color: #fecaca;
+            transform: translateY(-1px);
+        }
+
+    /* RTL Bootbox Modal Styling */
+    .bootbox .modal-content {
+        direction: rtl;
+        text-align: right;
+        font-family: 'Cairo', sans-serif;
+        border-radius: 16px;
+        border: 1px solid var(--border-subtle);
+    }
+
+    .bootbox .modal-header {
+        border-bottom: 1px solid var(--border-subtle);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .bootbox .modal-header .close,
+        .bootbox .modal-header .btn-close {
+            margin: 0;
+        }
+
+    .bootbox .modal-footer {
+        border-top: 1px solid var(--border-subtle);
+        justify-content: flex-start;
+        gap: 8px;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        padding-top: 18px;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        padding-top: 14px;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            border-radius: 8px !important;
+            border: 1px solid transparent !important;
+            font-weight: 600;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+        }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+                background: var(--primary-dark) !important;
+                color: #ffffff !important;
+                border-color: var(--primary-dark) !important;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                background: var(--edit-bg) !important;
+                color: var(--primary-dark) !important;
+                border-color: var(--edit-bg) !important;
+            }
+</style>
+
+<div class="menu-dashboard-container">
+    <div class="menu-header">
+        <div class="menu-title-group">
+            <h2>🍔 قائمة الطلبات</h2>
+            <p>إدارة أصناف البرجر والوجبات والأسعار بكل سهولة</p>
+        </div>
+
+        @Html.ActionLink("＋ أضف طلبك الجديد هنا", "CreateAjax", null, new { @class = "btn-add-order" })
+    </div>
+
+    <table class="table" id="cheeseBurgerTable" style="width:100%">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.ADpages.price)</th>
+                <th>@Html.DisplayNameFor(model => model.ADpages.categoryOrder)</th>
+                <th>@Html.DisplayNameFor(model => model.ADpages.menuNames)</th>
+                <th style="text-align: center;">الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- DataTables will populate rows here automatically via AJAX -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Include jQuery, Bootstrap JS, DataTables JS, and Bootbox JS -->
+<script src="~/Scripts/jquery-3.7.0.min.js"></script>
+<script src="~/Scripts/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var table = $('#cheeseBurgerTable').DataTable({
+            "ajax": {
+                "url": '@Url.Action("CategoryAjaxValues")',
+                "type": "GET",
+                "datatype": "json",
+                "dataSrc": "data"
+            },
+            "columns": [
+                {
+                    "data": "price",
+                    "render": function (data) {
+                        return '<span class="price-badge">' + data + ' JD</span>';
+                    }
+                },
+                {
+                    "data": "categoryName",
+                    "render": function (data) {
+                        return '<span class="category-pill">' + data + '</span>';
+                    }
+                },
+                {
+                    "data": "cheeseBurgerName",
+                    "render": function (data) {
+                        return '<span class="item-name">' + data + '</span>';
+                    }
+                },
+                {
+                    "data": "id",
+                    "className": "dt-body-center",
+                    "render": function (data, type, row) {
+                        var editUrl = '@Url.Action("EditList")/' + data;
+                        return '<div class="action-group">' +
+                                   '<a href="' + editUrl + '" class="btn-action btn-edit">تعديل</a>' +
+                                   '<button type="button" class="btn-action btn-delete js-delete" data-id="' + data + '" data-name="' + row.cheeseBurgerName + '">حذف</button>' +
+                               '</div>';
+                    },
+                    "orderable": false
+                }
+            ],
+            "language": {
+                "search": "بحث:",
+                "lengthMenu": "عرض _MENU_ طلبات",
+                "info": "عرض _START_ إلى _END_ من أصل _TOTAL_ طلب",
+                "infoEmpty": "لا توجد طلبات متاحة",
+                "zeroRecords": "لم يتم العثور على طلبات مطابقة",
+                "paginate": {
+                    "first": "الأول",
+                    "last": "الأخير",
+                    "next": "التالي",
+                    "previous": "السابق"
+                }
+            },
+            "paging": true,
+            "searching": true,
+            "info": true,
+            "ordering": true
+        });
+
+        // Bootbox Delete Confirmation
+        $('#cheeseBurgerTable').on('click', '.js-delete', function () {
+            var button = $(this);
+            var itemId = button.attr('data-id');
+            var itemName = button.attr('data-name');
+
+            bootbox.confirm({
+                title: "تأكيد الحذف",
+                message: "هل أنت متأكد أنك تريد حذف الصنف <strong>" + itemName + "</strong>؟ لا يمكن التراجع عن هذا الإجراء.",
+                buttons: {
+                    confirm: {
+                        label: '<i class="fa fa-trash"></i> نعم، احذف',
+                        className: 'btn-danger'
+                    },
+                    cancel: {
+                        label: 'إلغاء',
+                        className: 'btn-secondary'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: '@Url.Action("DeleteBreakFast")/' + itemId,
+                            type: 'POST', // Change to 'GET' if your controller action doesn't accept POST
+                            success: function () {
+                                // Smoothly remove the row from DataTables without refreshing the page
+                                table.row(button.parents('tr')).remove().draw();
+                            },
+                            error: function () {
+                                bootbox.alert("حدث خطأ أثناء محاولة الحذف. يرجى المحاولة مرة أخرى.");
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
